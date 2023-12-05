@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Coffee Roulette</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="roulette-container">
+      <canvas id="roulette" width="500" height="500"></canvas>
+    </div>
+    <div id="participant-container">
+      <input type="text" id="participant-name" placeholder="참여자 이름" />
+      <input
+        type="number"
+        id="participant-weight"
+        placeholder="가중치"
+        min="1"
+      />
+      <button id="add-participant">참여자 추가</button>
+    </div>
+
+    <button id="spin">Spin</button>
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+#roulette-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#roulette {
+  border: 2px solid black;
+  border-radius: 50%;
+}
+#participant-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#roulette-container::after {
+  content: "▲";
+  position: absolute;
+  top: calc(78%); /* 삼각형을 원형 위로 이동 */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 30px;
+  color: black;
+}
+
+#spin {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 20px;
+}
