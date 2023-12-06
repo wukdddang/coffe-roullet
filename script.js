@@ -195,6 +195,27 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
   drawRoulette();
 
+  document.querySelector("#reset").addEventListener("click", () => {
+    // location.reload();
+  });
+
+  const tech_7_member_DOM = document.querySelector(".tech7-users");
+
+  tech_7_member.forEach((name) => {
+    const userBtn = `
+        <div>
+        <input type="checkbox" id="${name}" />
+        <label for="${name}">
+          <span>${name}</span>
+          <span class="${name} ratio">1</span>
+          <button class="plus btn-sm">+</button>
+          <button class="minus btn-sm">-</button>
+        </label>
+      </div>
+    `;
+    tech_7_member_DOM.innerHTML += userBtn;
+  });
+
   document.querySelectorAll(".plus").forEach((element) => {
     element.addEventListener("click", (e) => {
       const label = e.target.closest("label");
@@ -238,9 +259,5 @@ document.addEventListener("DOMContentLoaded", () => {
         removeParticipant(e.target.id);
       }
     });
-  });
-
-  document.querySelector("#reset").addEventListener("click", () => {
-    // location.reload();
   });
 });
