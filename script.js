@@ -5,8 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // const participantInput = document.getElementById("participant-name");
   // const participantWeightInput = document.getElementById("participant-weight");
   // const addParticipantButton = document.getElementById("add-participant");
-  const resetButton = document.querySelector("#reset");
+  // const resetButton = document.querySelector("#reset");
   const selectorAllCheckbox = document.querySelector("#select-all");
+
+  const targetModal = document.querySelector("#target-modal");
 
   const pastelColors = [
     "#FFD1DC", // 분홍색 (Pastel Pink)
@@ -192,8 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
         spinSpeed = 0;
         return;
       }
-      resetButton.style.display = "flex";
-
+      // resetButton.style.display = "flex";
     }
     updateRoulette();
     requestAnimationFrame(spinRoulette);
@@ -242,9 +243,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // });
   drawRoulette();
 
-  document.querySelector("#reset").addEventListener("click", () => {
-    location.reload();
-  });
+  // document.querySelector("#reset").addEventListener("click", () => {
+  //   location.reload();
+  // });
 
   const tech_7_member_DOM = document.querySelector(".tech7-users");
 
@@ -324,7 +325,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const displayWinner = (winnerName) => {
     // 당첨된 유저를 표시하는 코드 (예: 알림, DOM 요소 변경 등)
-    window.alert(`당첨자: ${winnerName}`);
+    // window.alert(`당첨자: ${winnerName}`);
+    const winnerHtml = document.querySelector(".target-modal-body");
+    winnerHtml.innerHTML = "";
+    winnerHtml.innerHTML = winnerName;
+
+    targetModal.click();
   };
 
   selectorAllCheckbox.addEventListener("click", () => {
@@ -350,5 +356,4 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
-
 });

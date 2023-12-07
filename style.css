@@ -19,7 +19,7 @@
 #roulette-container::after {
   content: "";
   position: absolute;
-  right: 50px;
+  right: -30px;
   font-size: 30px;
   width: 30px;
   height: 30px;
@@ -27,11 +27,10 @@
   background: url("./triangle.svg") center/contain no-repeat;
 }
 
-#spin,
-#reset {
+#spin,/* #reset {
   box-sizing: border-box;
   display: block;
   margin: 20px auto;
   padding: 10px 20px;
   font-size: 20px;
-}
+} */;
