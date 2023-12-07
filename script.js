@@ -133,30 +133,25 @@ document.addEventListener("DOMContentLoaded", () => {
     ctx.restore();
   };
 
-  let spinSpeed = 1000; // 회전 속도 변수
+  let spinSpeed = 1; // 회전 속도 변수
   let isStopping = false; // 스핀 멈추기 시작했는지 표시하는 변수
 
   const spinRoulette = () => {
-    if (isStopping && spinSpeed <= 0) {
+    if (isStopping && spinSpeed <= 0.001) {
       spinSpeed = 0;
       isStopping = false;
-      isSpinning = false; // 스핀을 다시 시작할 수 있도록 상태 변경
+      isSpinning = false;
       spinButton.textContent = "Spin";
+      const winner = getWinner(); // 당첨자 결정
+      displayWinner(winner); // 당첨자 표시
     }
 
-    angle += spinSpeed; // 현재 속도로 회전
-
-    // 멈추기 시작했을 때만 속도 감소
+    angle += spinSpeed; // 회전 각도 증가
     if (isStopping) {
-      document.querySelector("#spin").disabled = "true";
-      // document.querySelector("#spin").style.display = "none";
-      spinSpeed *= Math.random() * (0.995 - 0.99) + 0.99; // 스핀 속도 감소
-      console.log(spinSpeed);
-      resetButton.style.display = "flex";
+      spinSpeed *= 0.95; // 스핀 속도 감소
     }
-
     updateRoulette();
-    animationFrameId = requestAnimationFrame(spinRoulette);
+    requestAnimationFrame(spinRoulette);
   };
 
   spinButton.addEventListener("click", () => {
@@ -222,8 +217,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const inputElement = label.previousElementSibling;
       const ratioElement = label.querySelector(".ratio");
 
-      let currentRatio = parseInt(ratioElement.innerText, 10);
-      currentRatio = Math.min(currentRatio + 1, 10); // 최소값은 1으로 설정
+      let currentRatio = parseFloat(ratioElement.innerText, 10);
+      currentRatio = Math.min(currentRatio + 0.1, 10); // 최소값은 1으로 설정
       ratioElement.innerText = currentRatio.toString();
 
       removeParticipant(label.htmlFor);
@@ -238,8 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const ratioElement = label.querySelector(".ratio");
 
-      let currentRatio = parseInt(ratioElement.innerText, 10);
-      currentRatio = Math.max(currentRatio - 1, 1); // 최소값은 1으로 설정
+      let currentRatio = parseFloat(ratioElement.innerText, 10);
+      currentRatio = Math.max(currentRatio - 0.1, 1); // 최소값은 1으로 설정
       ratioElement.innerText = currentRatio.toString();
 
       removeParticipant(label.htmlFor);
@@ -260,4 +255,25 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const getWinner = () => {
+    const adjustedAngle =
+      (2 * Math.PI - (angle % (2 * Math.PI))) % (2 * Math.PI); // 각도를 0에서 2π 사이 값으로 조정
+    let cumulativeAngle = 0;
+    const totalWeight = participants.reduce((acc, p) => acc + p.weight, 0);
+
+    // 각 참여자에 대해
+    for (const participant of participants) {
+      const sliceAngle = (participant.weight / totalWeight) * 2 * Math.PI;
+      cumulativeAngle += sliceAngle;
+      if (adjustedAngle <= cumulativeAngle) {
+        return participant.name; // 당첨된 참여자 반환
+      }
+    }
+  };
+
+  const displayWinner = (winnerName) => {
+    // 당첨된 유저를 표시하는 코드 (예: 알림, DOM 요소 변경 등)
+    window.alert(`당첨자: ${winnerName}`);
+  };
 });

@@ -15,10 +15,10 @@
 }
 
 #roulette-container::after {
-  content: "▲";
+  content: "◀";
   position: absolute;
-  top: calc(50%); /* 삼각형을 원형 위로 이동 */
-  left: 50%;
+  top: calc(24%); /* 삼각형을 원형 위로 이동 */
+  right: 30%;
   transform: translateX(-50%);
   font-size: 30px;
   color: black;
