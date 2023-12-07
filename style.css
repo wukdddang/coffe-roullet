@@ -2,6 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  width: 500px;
   height: 500px;
 }
 
@@ -15,13 +17,14 @@
 }
 
 #roulette-container::after {
-  content: "◀";
+  content: "";
   position: absolute;
-  top: calc(24%); /* 삼각형을 원형 위로 이동 */
-  right: 30%;
-  transform: translateX(-50%);
+  right: 50px;
   font-size: 30px;
-  color: black;
+  width: 30px;
+  height: 30px;
+  transform: rotate(30deg);
+  background: url("./triangle.svg") center/contain no-repeat;
 }
 
 #spin,
