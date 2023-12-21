@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Coffee Roulette</title>
     <link rel="stylesheet" href="style.css" />
     <link
@@ -18,100 +21,109 @@
   <body>
     <div class="container px-5">
       <div class="row">
-        <div id="roulette-container">
-          <canvas id="roulette" width="350" height="350"></canvas>
-        </div>
-      </div>
-      <div class="row">
-        <!-- Button trigger modal -->
-        <button
-          type="button"
-          class="btn btn-warning"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          참여자 선택
-        </button>
+        <div class="col-xl-3"></div>
+        <div class="col-xl-6">
+          <div class="row d-flex justify-content-center align-items-center">
+            <div id="roulette-container">
+              <canvas id="roulette" width="350" height="350"></canvas>
+            </div>
+          </div>
+          <div class="row">
+            <!-- Button trigger modal -->
+            <button
+              type="button"
+              class="btn btn-warning"
+              data-bs-toggle="modal"
+              data-bs-target="#tech-7-member-selection"
+            >
+              <span class="font-weight-bold">참여자 선택</span>
+            </button>
 
-        <button id="spin" class="btn btn-primary mt-3">Spin</button>
-        <!-- <button id="reset" class="btn btn-danger mt-3">Reset</button> -->
+            <button id="spin" class="btn btn-primary mt-3">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24"
+                fill="white"
+              >
+                <path
+                  d="M482-160q-134 0-228-93t-94-227v-7l-64 64-56-56 160-160 160 160-56 56-64-64v7q0 100 70.5 170T482-240q26 0 51-6t49-18l60 60q-38 22-78 33t-82 11Zm278-161L600-481l56-56 64 64v-7q0-100-70.5-170T478-720q-26 0-51 6t-49 18l-60-60q38-22 78-33t82-11q134 0 228 93t94 227v7l64-64 56 56-160 160Z"
+                />
+              </svg>
+              <span>Spin</span>
+            </button>
 
-        <!-- <button
-          id="reset"
-          class="btn btn-danger"
-          style="display: none; justify-content: center; align-items: center"
-        >
-          리셋하기
-        </button> -->
+            <!-- <button id="reset" class="btn btn-danger mt-3">Reset</button> -->
 
-        <!-- Modal -->
-        <div
-          class="modal fade"
-          id="exampleModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">참여자 선택</h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div id="participant-container">
-                  <input type="checkbox" id="select-all" />
-                  <label for="select-all">전체 선택</label>
-                  <div class="tech7-users"></div>
+            <!-- <button
+              id="reset"
+              class="btn btn-danger"
+              style="display: none; justify-content: center; align-items: center"
+            >
+              리셋하기
+            </button> -->
 
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">3</th>
-                        <td colspan="2">Larry the Bird</td>
-                        <td>@twitter</td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <!-- Modal -->
+            <div
+              class="modal fade"
+              id="tech-7-member-selection"
+              tabindex="-1"
+              aria-labelledby="tech-7-member-selection-label"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="tech-7-member-selection-label">
+                      <span class="font-weight-bold">참여자 선택</span>
+                    </h5>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="participant-container">
+                      <!-- <input type="checkbox" id="select-all" />
+                      <label for="select-all">전체 선택</label> -->
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th scope="col">참여</th>
+                            <th scope="col">이름</th>
+                            <th scope="col">가중치</th>
+                            <th scope="col">비율 조절</th>
+                          </tr>
+                        </thead>
+                        <tbody class="tech7-users"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button
+                      id="select-all"
+                      type="button"
+                      class="btn btn-success"
+                    >
+                      전체 선택
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      data-bs-dismiss="modal"
+                    >
+                      확인
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
               </div>
             </div>
           </div>
         </div>
+        <div class="col-xl-3"></div>
       </div>
     </div>
 
@@ -135,10 +147,12 @@
       aria-labelledby="staticBackdropLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content container-fluid">
           <div class="modal-header">
-            <h5 class="modal-title" id="staticBackdropLabel">축!</h5>
+            <h5 class="modal-title" id="staticBackdropLabel">
+              🎉🎊축하드립니다!🎉🎊
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -153,9 +167,15 @@
               class="btn btn-secondary"
               data-bs-dismiss="modal"
             >
-              Close
+              닫기
             </button>
-            <button type="button" class="btn btn-primary">Understood</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+            >
+              확인
+            </button>
           </div>
         </div>
       </div>
