@@ -78,3 +78,52 @@
   border-radius: 5px;
   transform: translate(-50%, -50%);
 }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.fire-border {
+  position: relative;
+  box-shadow: 0 0 10px 3px red; /* 기본 그림자 효과 */
+  animation: burning 1.5s infinite;
+}
+
+.fire-border::before {
+  animation: fireFrameBefore 1.5s infinite;
+}
+
+.fire-border::after {
+  animation: fireFrameAfter 1.5s infinite;
+}
+
+@keyframes burning {
+  0%,
+  100% {
+    box-shadow: 0 0 20px 3px red;
+  }
+  50% {
+    box-shadow: 0 0 25px 4px darkred;
+  }
+}
+
+@keyframes fireFrameBefore {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: red;
+  }
+}
+
+@keyframes fireFrameAfter {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: darkred;
+  }
+}

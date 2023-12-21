@@ -7,7 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>Coffee Roulette</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="/public/style.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,37 +22,67 @@
     <div class="container px-5">
       <div class="row">
         <div class="col-xl-3"></div>
-        <div class="col-xl-6">
+        <div class="col-xl-6 p-2 mt-5" id="main-column">
           <div class="row d-flex justify-content-center align-items-center">
             <div id="roulette-container">
               <canvas id="roulette" width="350" height="350"></canvas>
             </div>
           </div>
-          <div class="row">
-            <!-- Button trigger modal -->
-            <button
-              type="button"
-              class="btn btn-warning"
-              data-bs-toggle="modal"
-              data-bs-target="#tech-7-member-selection"
-            >
-              <span class="font-weight-bold">참여자 선택</span>
-            </button>
 
-            <button id="spin" class="btn btn-primary mt-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-                fill="white"
+          <div class="row d-flex align-items-stretch">
+            <!-- Button trigger modal -->
+            <div class="col-6 d-flex">
+              <button
+                id="spin"
+                class="btn btn-primary w-100 align-self-stretch"
               >
-                <path
-                  d="M482-160q-134 0-228-93t-94-227v-7l-64 64-56-56 160-160 160 160-56 56-64-64v7q0 100 70.5 170T482-240q26 0 51-6t49-18l60 60q-38 22-78 33t-82 11Zm278-161L600-481l56-56 64 64v-7q0-100-70.5-170T478-720q-26 0-51 6t-49 18l-60-60q38-22 78-33t82-11q134 0 228 93t94 227v7l64-64 56 56-160 160Z"
-                />
-              </svg>
-              <span>Spin</span>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24"
+                  viewBox="0 -960 960 960"
+                  width="24"
+                  fill="white"
+                >
+                  <path
+                    d="M482-160q-134 0-228-93t-94-227v-7l-64 64-56-56 160-160 160 160-56 56-64-64v7q0 100 70.5 170T482-240q26 0 51-6t49-18l60 60q-38 22-78 33t-82 11Zm278-161L600-481l56-56 64 64v-7q0-100-70.5-170T478-720q-26 0-51 6t-49 18l-60-60q38-22 78-33t82-11q134 0 228 93t94 227v7l64-64 56 56-160 160Z"
+                  />
+                </svg>
+                <span>Spin</span>
+              </button>
+            </div>
+            <div class="col-3 d-flex">
+              <button
+                type="button"
+                class="btn btn-primary w-100 align-self-stretch"
+                id="practiceModeButton"
+              >
+                <span class="font-weight-bold" id="buttonText">연습 모드</span>
+              </button>
+            </div>
+
+            <div class="col-3">
+              <div class="col-12">
+                <button
+                  type="button"
+                  class="btn btn-dark w-100 mb-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#tech-7-member-selection"
+                >
+                  <span class="font-weight-bold">참여자 선택</span>
+                </button>
+              </div>
+              <div class="col-12">
+                <button
+                  type="button"
+                  class="btn btn-warning w-100"
+                  data-bs-toggle="modal"
+                  data-bs-target="#tech-7-member-selection"
+                  onclick="location.href='/user'"
+                >
+                  <span class="font-weight-bold">명예의 전당</span>
+                </button>
+              </div>
+            </div>
 
             <!-- <button id="reset" class="btn btn-danger mt-3">Reset</button> -->
 
@@ -181,7 +211,7 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="/public/script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

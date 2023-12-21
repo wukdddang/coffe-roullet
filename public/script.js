@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const canvas = document.getElementById("roulette");
   const ctx = canvas.getContext("2d");
   const spinButton = document.querySelector("#spin");
@@ -38,26 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let animationFrameId;
   let isSelectorAllClicked = false;
 
-  const tech_7_member = [
-    "공영균",
-    "김일진",
-    "김인경",
-    "김상훈",
-    "김종식",
-    "김동환",
-    "우창욱",
-  ];
-  const tech_7_member_Weights = [1.5, 1, 1, 1.3, 1, 1, 1];
+  const tech_7_member = [];
+  const tech_7_member_Weights = [];
+  const tech_7_member_profileImg = [];
 
-  const tech_7_member_profileImg = [
-    true,
-    true,
-    false,
-    false,
-    true,
-    false,
-    true,
-  ];
+  const res = await fetch("/user/list");
+
+  const registeredUserArray = await res.json();
+
+  registeredUserArray.users.forEach((user) => {
+    tech_7_member.push(user.name);
+    tech_7_member_Weights.push(user.weight);
+    tech_7_member_profileImg.push(user.isProfile);
+  });
 
   const participantModal = new bootstrap.Modal(
     document.getElementById("tech-7-member-selection")
@@ -213,8 +206,9 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("참여자가 없습니다!");
       return;
     }
-
     if (!isSpinning) {
+      document.getElementById("practiceModeButton").disabled = true;
+
       isSpinning = true;
       isStopping = false;
       spinSpeed = 0.4;
@@ -240,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <th scope="row"><input type="checkbox" id="${name}" class="tech7" /></th>
           <td>
             <label for="${name}">
-              <img src="./imgs/${
+              <img src="/public/imgs/${
                 tech_7_member_profileImg[idx] ? name : "default-user"
               }.png" width="20px" height="20px"/>
               <span>${name}</span>
@@ -250,8 +244,10 @@ document.addEventListener("DOMContentLoaded", () => {
       tech_7_member_Weights[idx]
     }</span></td>
           <td>
-            <button class="plus btn btn-primary btn-sm">+</button>
-            <button class="minus btn btn-outline-primary btn-sm">-</button>
+          <button class="plus btn btn-primary btn-sm ms-2">＋</button>
+          <button class="minus btn btn-outline-primary btn-sm">
+            －
+          </button>
           </td>
         </tr>
       `;
@@ -327,13 +323,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // 당첨자 출력하는 함수
-  const displayWinner = (winnerName) => {
+  const displayWinner = async (winnerName) => {
     // 당첨된 유저를 표시하는 코드 (예: 알림, DOM 요소 변경 등)
     // window.alert(`당첨자: ${winnerName}`);
+    if (!isPracticeMode) {
+      await fetch(`/user/increase/${winnerName}`);
+      await fetch;
+    }
+
+    document.getElementById("practiceModeButton").disabled = false;
+
     const winnerHtml = document.querySelector(".target-modal-body");
+
     winnerHtml.innerHTML = "";
     winnerHtml.innerHTML = `
-      <img src="./imgs/congratulation.png" class="target-modal-body-background"/>
+      <img src="/public/imgs/congratulation.png" class="target-modal-body-background"/>
       <div class="target-modal-body-text font-weight-bold text-center">${winnerName}님! <br/> 커피 감사합니다! ☕</div>
     `;
 
@@ -382,4 +386,45 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   initRoulette();
+
+  let isPracticeMode = true;
+
+  document
+    .getElementById("practiceModeButton")
+    .addEventListener("click", function () {
+      this.classList.toggle("btn-primary");
+      this.classList.toggle("btn-danger");
+
+      isPracticeMode = !isPracticeMode;
+
+      const buttonText = document.getElementById("buttonText");
+      buttonText.textContent = isPracticeMode ? "연습 모드" : "실전 모드";
+
+      const mainColumn = document.getElementById("main-column");
+      if (!isPracticeMode) {
+        mainColumn.classList.add("fire-border");
+      } else {
+        mainColumn.classList.remove("fire-border");
+      }
+    });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".plus-permanently").forEach((button) => {
+      button.addEventListener("click", function () {
+        const name = this.getAttribute("data-name");
+        fetch(`/user/increase/weight/${name}`, { method: "GET" }).then(
+          (response) => window.location.reload()
+        );
+      });
+    });
+
+    document.querySelectorAll(".minus-permanently").forEach((button) => {
+      button.addEventListener("click", function () {
+        const name = this.getAttribute("data-name");
+        fetch(`/user/decrease/weight/${name}`, { method: "GET" }).then(
+          (response) => window.location.reload()
+        );
+      });
+    });
+  });
 });
