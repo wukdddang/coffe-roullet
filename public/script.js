@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   registeredUserArray.users.forEach((user) => {
     tech_7_member.push(user.name);
-    tech_7_member_Weights.push(user.weight);
+    tech_7_member_Weights.push(user.weight.toFixed(1));
     tech_7_member_profileImg.push(user.isProfile);
   });
 

@@ -21,17 +21,21 @@
   <body>
     <div class="container px-3">
       <div class="row">
-        <div class="col-xl-3 col-sm-0"></div>
-        <div class="col-xl-6 col-sm-12 p-2 mt-1" id="main-column">
-          <div class="row d-flex justify-content-center align-items-center">
-            <div id="roulette-container">
-              <canvas id="roulette" width="350" height="350"></canvas>
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4 p-2 mt-1" id="main-column">
+          <div class="row">
+            <div
+              class="col-sm-12 d-flex justify-content-center align-items-center"
+            >
+              <div id="roulette-container">
+                <canvas id="roulette" width="300" height="300"></canvas>
+              </div>
             </div>
           </div>
 
           <div class="row d-flex align-items-stretch">
             <!-- Button trigger modal -->
-            <div class="col-xl-6 d-flex">
+            <div class="col-sm-12">
               <button
                 id="spin"
                 class="btn btn-primary w-100 align-self-stretch mb-2"
@@ -50,7 +54,7 @@
                 <span>Spin</span>
               </button>
             </div>
-            <div class="col-xl-3 d-flex">
+            <div class="col-sm-12">
               <button
                 type="button"
                 class="btn btn-primary w-100 align-self-stretch mb-2"
@@ -60,8 +64,8 @@
               </button>
             </div>
 
-            <div class="col-xl-3">
-              <div class="col-xl-12">
+            <div class="col-sm-12">
+              <div class="col-sm-12">
                 <button
                   type="button"
                   class="btn btn-dark w-100 mb-2"
@@ -71,12 +75,10 @@
                   <span class="font-weight-bold">참여자 선택</span>
                 </button>
               </div>
-              <div class="col-xl-12">
+              <div class="col-sm-12">
                 <button
                   type="button"
                   class="btn btn-warning w-100"
-                  data-bs-toggle="modal"
-                  data-bs-target="#tech-7-member-selection"
                   onclick="location.href='/user'"
                 >
                   <span class="font-weight-bold">명예의 전당</span>
@@ -117,19 +119,27 @@
                   </div>
                   <div class="modal-body">
                     <div id="participant-container">
+                      <div class="row">
+                        <table class="table table-hover">
+                          <colgroup>
+                            <col style="width: 20%" />
+                            <col style="width: 30%" />
+                            <col style="width: 20%" />
+                            <col style="width: 30%" />
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th scope="col text-sm">참여</th>
+                              <th scope="col">이름</th>
+                              <th scope="col">가중치</th>
+                              <th scope="col">비율 조절</th>
+                            </tr>
+                          </thead>
+                          <tbody class="tech7-users"></tbody>
+                        </table>
+                      </div>
                       <!-- <input type="checkbox" id="select-all" />
                       <label for="select-all">전체 선택</label> -->
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th scope="col">참여</th>
-                            <th scope="col">이름</th>
-                            <th scope="col">가중치</th>
-                            <th scope="col">비율 조절</th>
-                          </tr>
-                        </thead>
-                        <tbody class="tech7-users"></tbody>
-                      </table>
                     </div>
                   </div>
                   <div class="modal-footer">
@@ -153,7 +163,7 @@
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-sm-0"></div>
+        <div class="col-sm-4"></div>
       </div>
     </div>
 

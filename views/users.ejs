@@ -20,17 +20,17 @@
   align-items: center; flex-direction: column;"> -->
   <body>
     <div class="row">
-      <div class="col-4"></div>
-      <div class="col-4 mt-5">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4 mt-5">
         <div class="row">
-          <div class="col-12">
+          <div class="col-sm-12 mx-2">
             <table class="table table-hover">
               <colgroup>
+                <col style="width: 10%" />
                 <col style="width: 20%" />
-                <col style="width: 20%" />
-                <col style="width: 20%" />
-                <col style="width: 20%" />
-                <col style="width: 20%" />
+                <col style="width: 15%" />
+                <col style="width: 30%" />
+                <col style="width: 15%" />
               </colgroup>
 
               <thead>
@@ -38,8 +38,8 @@
                   <th>Rank</th>
                   <th>이름</th>
                   <th>걸린 횟수</th>
-                  <th>가중치</th>
-                  <th>상세보기</th>
+                  <th class="text-center">가중치</th>
+                  <th>상세<br />보기</th>
                 </tr>
               </thead>
               <tbody>
@@ -71,12 +71,12 @@
               </tbody>
             </table>
           </div>
-          <div class="col-12">
+          <div class="col-sm-12">
             <form method="post" target="/user">
               <div
                 class="form-group d-flex align-items-end justify-content-end"
               >
-                <div class="mb-3 col-5">
+                <div class="mb-3 col-sm-5">
                   <input
                     type="text"
                     name="name"
@@ -100,7 +100,7 @@
           </div>
         </div>
       </div>
-      <div class="col-4"></div>
+      <div class="col-sm-4"></div>
     </div>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
