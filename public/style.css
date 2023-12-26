@@ -38,7 +38,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 10px;
+  padding-bottom: 9px;
   /* transform: rotate(30deg);
   background: url("./imgs/triangle.svg") center/contain no-repeat; */
 }
