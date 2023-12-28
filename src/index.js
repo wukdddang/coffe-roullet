@@ -45,6 +45,8 @@ app.get("/user/list", async (req, res) => {
           user.weight *= 0.7;
         }
       });
+      users.sort(() => Math.random() - 0.5);
+      return res.json({ success: true, users });
     }
 
     // latestHistory가 존재하지 않으면, 유저 목록을 랜덤으로 섞어 반환합니다.
