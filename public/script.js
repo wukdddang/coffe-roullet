@@ -328,7 +328,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     // window.alert(`당첨자: ${winnerName}`);
     if (!isPracticeMode) {
       await fetch(`/user/increase/${winnerName}`);
-      await fetch;
+      await fetch(`/user/increase/participation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participants,
+        }),
+      });
     }
 
     document.getElementById("practiceModeButton").disabled = false;
@@ -427,4 +435,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   });
+
+  // 이벤트 추가 함수
+  function addEvent(title, start, end) {
+    calendar.addEvent({
+      title: title,
+      start: start,
+      end: end,
+    });
+  }
 });

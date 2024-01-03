@@ -119,7 +119,10 @@ app.get("/user/:id", async (req, res) => {
       createdAt: -1,
     });
 
-    res.render("detail", { user });
+    const winRate = ((user.times / user.participationCount) * 100).toFixed(2);
+
+    console.log(winRate);
+    res.render("detail", { user, winRate });
   } catch (error) {
     console.error(error);
     res.redirect("/");
@@ -189,6 +192,31 @@ app.get("/user/decrease/weight/:name", async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.json({ success: false });
+  }
+});
+
+app.post("/user/increase/participation", async (req, res) => {
+  try {
+    const { participants } = req.body; // 요청 본문에서 참가자 목록 추출
+
+    if (!participants || !Array.isArray(participants)) {
+      return res.status(400).json({ message: "Invalid participants array" });
+    }
+
+    // 각 참가자의 participation 값을 +1 증가
+    await Promise.all(
+      participants.map(async (participate) => {
+        await User.findOneAndUpdate(
+          { name: participate.name },
+          { $inc: { participationCount: 1 } },
+          { new: true }
+        );
+      })
+    );
+
+    res.status(200).json({ message: "Participation updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error });
   }
 });
 
