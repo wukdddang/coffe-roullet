@@ -1,9 +1,9 @@
 "use client";
 
-import FetchClass from "@/app/service/fetch";
+import FetchClass from "@/service/fetch";
 import { useState } from "react";
 
-const Roulette = () => {
+export default function Roulette() {
   const [data, setData] = useState(null);
   const fetchInstance = new FetchClass();
 
@@ -24,6 +24,4 @@ const Roulette = () => {
       {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </div>
   );
-};
-
-export default Roulette;
+}
