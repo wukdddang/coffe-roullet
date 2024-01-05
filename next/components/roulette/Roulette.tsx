@@ -21,13 +21,12 @@ type User = {
 
 export default function Roulette() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const spinButtonRef = useRef<HTMLButtonElement>(null);
   const { participants } = useGlobalState();
   const [colors, setColors] = useState<pastelColors[]>([]);
-  const [isStopping, setIsStopping] = useState(false); // 새로운 상태 추가
 
   let roulettes = [];
-  // let isSpinning = false;
+  let isStopping = false;
+  let isSpinning = false;
   let spinSpeed = 0.4; // 초기 회전 속도
   let angle = 0; // 초기 각도
 
@@ -40,14 +39,14 @@ export default function Roulette() {
 
     if (isStopping) {
       // 멈추기 시작했을 때
-      spinSpeed *= 0.95; // 서서히 멈추는 효과
-      if (spinSpeed <= 0.01) {
+      spinSpeed *= Math.random() * (0.995 - 0.99) + 0.99;
+      if (spinSpeed <= 0.001) {
         // 멈춘 경우
-        setIsStopping(false);
+        isStopping = true;
+        isSpinning = false;
+        spinSpeed = 0.4;
         return; // 회전 중단
       }
-    } else {
-      spinSpeed *= 0.99; // 정상 회전 감속
     }
 
     updateRoulette(); // 룰렛 업데이트
@@ -55,13 +54,11 @@ export default function Roulette() {
   };
 
   const toggleSpin = () => {
-    if (!isStopping) {
-      setIsStopping(true); // 멈추기 시작
-    } else {
-      // 멈추기 중지 및 속도 초기화
-      setIsStopping(false);
-      spinSpeed = 0.4;
-      spinRoulette(); // 회전 재개
+    if (isSpinning && !isStopping) {
+      isStopping = true;
+    } else if (!isSpinning) {
+      isSpinning = true;
+      spinRoulette();
     }
   };
 
