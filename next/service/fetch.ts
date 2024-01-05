@@ -1,7 +1,6 @@
 import CustomError from "./customerror";
 
 export default class FetchClass {
-  // ...
   async runFetch(url: string, options: any) {
     try {
       this.validation(url);
@@ -9,7 +8,7 @@ export default class FetchClass {
       const res = await fetch(url, options);
       const data = await res.json();
       return data;
-    } catch (error) {
+    } catch (error: any) {
       if (error.at === undefined) {
         throw new CustomError(
           "FetchClass.validation error occurred",
@@ -29,7 +28,7 @@ export default class FetchClass {
 
         throw error;
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.at === undefined) {
         throw new CustomError(
           "FetchClass.validation error occurred",
