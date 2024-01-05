@@ -1,6 +1,7 @@
 import { useRouter } from "next/navigation";
 
 type Props = {
+  id?: string;
   icon: React.ReactNode;
   text: string;
   type: "button" | "submit" | "reset";
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const IconButton = ({
+  id,
   icon,
   text,
   type,
@@ -29,6 +31,7 @@ const IconButton = ({
 
   return (
     <button
+      id={id}
       type={type}
       className={`${className} tw-shadow-xl`}
       onClick={handleClick}

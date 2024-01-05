@@ -41,10 +41,16 @@ export default function Roulette() {
       // 멈추기 시작했을 때
       spinSpeed *= Math.random() * (0.995 - 0.99) + 0.99;
       if (spinSpeed <= 0.001) {
+        const stopButton = document.querySelector("#spin");
         // 멈춘 경우
-        isStopping = true;
+        isStopping = false;
         isSpinning = false;
         spinSpeed = 0.4;
+        if (stopButton) {
+          stopButton.disabled = false;
+          stopButton.textContent = "룰렛 돌리기";
+        }
+
         return; // 회전 중단
       }
     }
@@ -54,9 +60,17 @@ export default function Roulette() {
   };
 
   const toggleSpin = () => {
+    const stopButton = document.querySelector("#spin");
     if (isSpinning && !isStopping) {
       isStopping = true;
+      if (stopButton) {
+        stopButton.disabled = true;
+        stopButton.textContent = "룰렛 돌리기";
+      }
     } else if (!isSpinning) {
+      if (stopButton) {
+        stopButton.textContent = "룰렛 멈추기";
+      }
       isSpinning = true;
       spinRoulette();
     }
@@ -110,7 +124,7 @@ export default function Roulette() {
         ctx.rotate(textAngle);
         ctx.textAlign = "right";
         ctx.fillStyle = "#000000"; // 텍스트 색상
-        ctx.font = "14px Pretendard"; // 텍스트 폰트
+        ctx.font = "Bold 14px Pretendard"; // 텍스트 폰트
         ctx.fillText(participant.name, canvas.width / 2 - 10, 0); // 텍스트 위치 조정
         ctx.imageSmoothingEnabled = false; // 안티엘리어싱 해제
         ctx.restore();
@@ -156,12 +170,6 @@ export default function Roulette() {
     }
   }, [participants, colors]);
 
-  // useEffect(() => {
-  //   if (participants.length > 0) {
-  //     spinRoulette();
-  //   }
-  // }, [isStopping]);
-
   return (
     <motion.div
       // TODO: motion.div 애니메이션 분리 필요
@@ -194,10 +202,11 @@ export default function Roulette() {
           </motion.div>
           <div className="tw-flex tw-justify-center tw-flex-col tw-gap-2 tw-items-center">
             <IconButton
+              id="spin"
               icon={<FaRotateRight />}
               text={isStopping ? "룰렛 멈추기" : "룰렛 돌리기"}
               type="button"
-              className="tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-flex tw-justify-center tw-items-center tw-gap-2"
+              className="tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-flex tw-justify-center tw-items-center tw-gap-2 disabled:tw-opacity-50"
               action="spin"
               onClick={toggleSpin}
             />
