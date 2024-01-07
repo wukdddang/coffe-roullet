@@ -12,7 +12,7 @@ type Props = {
 };
 
 export type User = {
-  id: number;
+  _id: number;
   name: string;
   weight: number;
   times: number;

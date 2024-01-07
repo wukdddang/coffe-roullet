@@ -110,7 +110,7 @@ export default function Page() {
                           type="button"
                           className="tw-text-[10px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white sm:tw-py-2 sm:tw-px-3 tw-rounded-lg tw-shadow-lg tw-py-[2px] tw-px-[4px] tw-mx-auto"
                           onClick={() => {
-                            router.push(`/users/${user.name}`);
+                            router.push(`/users/${user._id}`);
                           }}
                         >
                           <FaArrowRightToBracket />
