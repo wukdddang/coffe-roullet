@@ -6,7 +6,7 @@ type Props = {
   text: string;
   type: "button" | "submit" | "reset";
   className?: string;
-  action?: "spin" | "choose" | "practice";
+  action?: "spin" | "choose" | "inGame";
   onClick?: () => void;
 };
 
@@ -22,11 +22,12 @@ const IconButton = ({
   const router = useRouter();
 
   const handleClick = () => {
-    if (action === "spin" && onClick) {
-      onClick();
+    if ((action === "spin" || action === "inGame") && onClick) {
+      return onClick();
     } else {
       router.push(`/${action}`);
     }
+    // onClick && onClick();
   };
 
   return (

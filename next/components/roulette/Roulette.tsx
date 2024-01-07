@@ -5,30 +5,74 @@ import { motion } from "framer-motion";
 import { FaRotateRight } from "react-icons/fa6";
 import { VscTriangleLeft } from "react-icons/vsc";
 import { IoPeopleSharp } from "react-icons/io5";
+import { BsFire } from "react-icons/bs";
 import { FaRunning } from "react-icons/fa";
+import { congratulationImg } from "public/imgs";
 
 // import FetchClass from "@/service/fetch";
 import { getPastelColors, pastelColors } from "@/constants/colors";
-import { useGlobalState } from "@/context/GlobalProvider";
+import { User, useGlobalState } from "@/context/GlobalProvider";
 // import NormalButton from "../buttons/NormalButton";
 import IconButton from "../buttons/IconButton";
-
-type User = {
-  id: number;
-  name: string;
-  weight: number;
-};
+import useFetchUserList from "@/hooks/useFetchUserList";
 
 export default function Roulette() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { participants } = useGlobalState();
+  const { participants, setParticipants } = useFetchUserList();
   const [colors, setColors] = useState<pastelColors[]>([]);
+  const [mode, setMode] = useState<"practice" | "hard">("practice");
 
   let roulettes = [];
   let isStopping = false;
   let isSpinning = false;
   let spinSpeed = 0.4; // 초기 회전 속도
   let angle = 0; // 초기 각도
+
+  const getWinner = () => {
+    const adjustedAngle =
+      (2 * Math.PI - (angle % (2 * Math.PI))) % (2 * Math.PI); // 각도를 0에서 2π 사이 값으로 조정
+    let cumulativeAngle = 0;
+    const totalWeight = participants.reduce((acc, p) => acc + p.weight, 0);
+
+    // 각 참여자에 대해
+    for (const participant of participants) {
+      const sliceAngle = (participant.weight / totalWeight) * 2 * Math.PI;
+      cumulativeAngle += sliceAngle;
+      if (adjustedAngle <= cumulativeAngle) {
+        return participant.name; // 당첨된 참여자 반환
+      }
+    }
+  };
+
+  const displayWinner = async (winnerName?: string) => {
+    // 당첨된 유저를 표시하는 코드 (예: 알림, DOM 요소 변경 등)
+    const targetModal = document.querySelector("#target-modal") as HTMLElement;
+
+    if (mode === "hard") {
+      await fetch(`/user/increase/${winnerName}`);
+      await fetch(`/user/increase/participation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          participants,
+        }),
+      });
+    }
+
+    const winnerHtml = document.querySelector(
+      ".target-modal-body"
+    ) as HTMLElement;
+
+    winnerHtml.innerHTML = "";
+    winnerHtml.innerHTML = `
+      <img src="/imgs/congratulation.png" class="target-modal-body-background"/>
+      <div class="target-modal-body-text font-weight-bold text-center">${winnerName}님! <br/> 커피 감사합니다! ☕</div>
+    `;
+
+    targetModal.click();
+  };
 
   const spinRoulette = () => {
     if (!canvasRef.current) {
@@ -41,7 +85,10 @@ export default function Roulette() {
       // 멈추기 시작했을 때
       spinSpeed *= Math.random() * (0.995 - 0.99) + 0.99;
       if (spinSpeed <= 0.001) {
-        const stopButton = document.querySelector("#spin");
+        const winner = getWinner(); // 당첨자 결정
+        displayWinner(winner); // 당첨자 표시
+
+        const stopButton = document.querySelector("#spin") as HTMLButtonElement;
         // 멈춘 경우
         isStopping = false;
         isSpinning = false;
@@ -60,7 +107,7 @@ export default function Roulette() {
   };
 
   const toggleSpin = () => {
-    const stopButton = document.querySelector("#spin");
+    const stopButton = document.querySelector("#spin") as HTMLButtonElement;
     if (isSpinning && !isStopping) {
       isStopping = true;
       if (stopButton) {
@@ -171,63 +218,84 @@ export default function Roulette() {
   }, [participants, colors]);
 
   return (
-    <motion.div
-      // TODO: motion.div 애니메이션 분리 필요
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeInOut" }}
-    >
-      {participants.length === 0 ? (
-        <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
-          룰렛을 렌더링 중입니다...
-        </div>
-      ) : (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            id="roulette-container"
-          >
-            <canvas
-              ref={canvasRef}
-              id="roulette"
-              width="300"
-              height="300"
-              className="tw-shadow-xl"
-            ></canvas>
-            <div className="tw-flex tw-justify-center tw-items-center tw-pb-[9px]">
-              <VscTriangleLeft size={36} />
-            </div>
-          </motion.div>
-          <div className="tw-flex tw-justify-center tw-flex-col tw-gap-2 tw-items-center">
-            <IconButton
-              id="spin"
-              icon={<FaRotateRight />}
-              text={isStopping ? "룰렛 멈추기" : "룰렛 돌리기"}
-              type="button"
-              className="tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-flex tw-justify-center tw-items-center tw-gap-2 disabled:tw-opacity-50"
-              action="spin"
-              onClick={toggleSpin}
-            />
-
-            <IconButton
-              icon={<FaRunning />}
-              text="연습 모드"
-              type="button"
-              className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
-              action="practice"
-            />
-            <IconButton
-              icon={<IoPeopleSharp />}
-              text="참여자 선택"
-              type="button"
-              className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-gray-800 hover:tw-bg-gray-900 active:tw-bg-gray-900 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
-              action="choose"
-            />
+    <>
+      <motion.div
+        // TODO: motion.div 애니메이션 분리 필요
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+      >
+        {participants.length === 0 ? (
+          <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
+            룰렛을 렌더링 중입니다...
           </div>
-        </>
+        ) : (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              id="roulette-container"
+            >
+              <canvas
+                ref={canvasRef}
+                id="roulette"
+                width="300"
+                height="300"
+                className="tw-shadow-xl"
+              ></canvas>
+              <div className="tw-flex tw-justify-center tw-items-center tw-pb-[9px]">
+                <VscTriangleLeft size={36} />
+              </div>
+            </motion.div>
+            <div className="tw-flex tw-justify-center tw-flex-col tw-gap-2 tw-items-center">
+              <IconButton
+                id="spin"
+                icon={<FaRotateRight />}
+                text={isStopping ? "룰렛 멈추기" : "룰렛 돌리기"}
+                type="button"
+                className="tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-flex tw-justify-center tw-items-center tw-gap-2 disabled:tw-opacity-50"
+                action="spin"
+                onClick={toggleSpin}
+              />
+
+              {mode === "practice" ? (
+                <IconButton
+                  icon={<FaRunning />}
+                  text="연습 모드"
+                  type="button"
+                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                  action="inGame"
+                  onClick={() => {
+                    setMode("hard");
+                  }}
+                />
+              ) : (
+                <IconButton
+                  icon={<BsFire />}
+                  text="실전 모드"
+                  type="button"
+                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-rose-600 hover:tw-bg-rose-700 active:tw-bg-rose-700 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                  action="inGame"
+                  onClick={() => {
+                    setMode("practice");
+                  }}
+                />
+              )}
+              <IconButton
+                icon={<IoPeopleSharp />}
+                text="참여자 선택"
+                type="button"
+                className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-gray-800 hover:tw-bg-gray-900 active:tw-bg-gray-900 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                action="choose"
+              />
+            </div>
+          </>
+        )}
+      </motion.div>
+      {mode === "hard" && (
+        <div className="fire tw-fixed tw-w-full tw-h-full tw-inset-0 -tw-z-10 tw-opacity-70" />
       )}
-    </motion.div>
+    </>
   );
 }

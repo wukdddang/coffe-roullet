@@ -4,6 +4,7 @@ import "/public/style.css";
 import Script from "next/script";
 import { GlobalProvider } from "@/context/GlobalProvider";
 import Header from "@/components/header/Header";
+import background from "./flame.scss";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className} {...background}>
         <Header />
         <GlobalProvider>{children}</GlobalProvider>
         <Script

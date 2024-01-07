@@ -11,10 +11,11 @@ type Props = {
   children: React.ReactNode;
 };
 
-type User = {
+export type User = {
   id: number;
   name: string;
   weight: number;
+  times: number;
 };
 
 const initialState = {

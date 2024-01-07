@@ -1,6 +1,17 @@
 import CustomError from "./customerror";
 
 export default class FetchClass {
+  private static instance: FetchClass;
+
+  private constructor() {}
+
+  public static getInstance(): FetchClass {
+    if (!FetchClass.instance) {
+      FetchClass.instance = new FetchClass();
+    }
+    return FetchClass.instance;
+  }
+
   async runFetch(url: string, options: any) {
     try {
       this.validation(url);
