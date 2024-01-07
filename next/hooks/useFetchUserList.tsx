@@ -18,7 +18,7 @@ export default function useFetchUserList() {
   };
 
   useEffect(() => {
-    if (participants.length === 0) {
+    if (!participants || participants.length === 0) {
       handleFetchUserList();
     }
   }, [participants]);

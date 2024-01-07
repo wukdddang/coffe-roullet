@@ -49,8 +49,14 @@ export default function Roulette() {
     const targetModal = document.querySelector("#target-modal") as HTMLElement;
 
     if (mode === "hard") {
-      await fetch(`/user/increase/${winnerName}`);
-      await fetch(`/user/increase/participation`, {
+      await fetch(`/api/user/increase/${winnerName}`).then((res) => {
+        if (res.ok) {
+          console.log("성공");
+        } else {
+          console.log("실패");
+        }
+      });
+      await fetch(`/api/user/increase/participation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +101,9 @@ export default function Roulette() {
         spinSpeed = 0.4;
         if (stopButton) {
           stopButton.disabled = false;
-          stopButton.textContent = "룰렛 돌리기";
+          stopButton.innerHTML = `
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="12px" width="12px" xmlns="http://www.w3.org/2000/svg"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"></path></svg>
+          룰렛 돌리기`;
         }
 
         return; // 회전 중단
@@ -112,11 +120,16 @@ export default function Roulette() {
       isStopping = true;
       if (stopButton) {
         stopButton.disabled = true;
-        stopButton.textContent = "룰렛 돌리기";
+        stopButton.innerHTML = `
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="12px" width="12px" xmlns="http://www.w3.org/2000/svg"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"></path></svg>
+        룰렛 돌리기`;
       }
     } else if (!isSpinning) {
       if (stopButton) {
-        stopButton.textContent = "룰렛 멈추기";
+        stopButton.innerHTML = `
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="12px" width="12px" xmlns="http://www.w3.org/2000/svg"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm96 328c0 8.8-7.2 16-16 16H176c-8.8 0-16-7.2-16-16V176c0-8.8 7.2-16 16-16h160c8.8 0 16 7.2 16 16v160z"></path></svg>
+        룰렛 멈추기
+        `;
       }
       isSpinning = true;
       spinRoulette();
@@ -205,14 +218,14 @@ export default function Roulette() {
   };
 
   useEffect(() => {
-    if (participants.length > 0) {
+    if (participants && participants.length > 0) {
       const availableColors = shuffleArray(getPastelColors());
       setColors(availableColors);
     }
   }, [participants]);
 
   useEffect(() => {
-    if (participants.length > 0 && colors.length > 0) {
+    if (participants && participants.length > 0 && colors.length > 0) {
       drawRoulette(participants, canvasRef.current!);
     }
   }, [participants, colors]);
@@ -225,7 +238,7 @@ export default function Roulette() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeInOut" }}
       >
-        {participants.length === 0 ? (
+        {!participants || participants.length === 0 ? (
           <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
             룰렛을 렌더링 중입니다...
           </div>
@@ -251,8 +264,8 @@ export default function Roulette() {
             <div className="tw-flex tw-justify-center tw-flex-col tw-gap-2 tw-items-center">
               <IconButton
                 id="spin"
-                icon={<FaRotateRight />}
-                text={isStopping ? "룰렛 멈추기" : "룰렛 돌리기"}
+                icon={<FaRotateRight size={12} />}
+                text={"룰렛 돌리기"}
                 type="button"
                 className="tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-flex tw-justify-center tw-items-center tw-gap-2 disabled:tw-opacity-50"
                 action="spin"

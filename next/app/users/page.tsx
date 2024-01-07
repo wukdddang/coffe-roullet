@@ -11,12 +11,11 @@ import { imgs, 기본값 } from "public/imgs";
 
 export default function Page() {
   const router = useRouter();
-  const { user } = useFetchUser();
-  console.log(user);
+  const { users } = useFetchUser();
 
   return (
     <>
-      {user.length === 0 ? (
+      {users.length === 0 ? (
         <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
           유저를 불러오는 중입니다...
         </div>
@@ -52,7 +51,7 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody>
-                {user.map((user, index) => {
+                {users.map((user, index) => {
                   const userImg = imgs.find((img) => img.name === user.name);
 
                   return (
@@ -97,7 +96,9 @@ export default function Page() {
                             fetch(`/api/user/decrease/weight/${user.name}`, {
                               method: "GET",
                             }).then((res) => {
-                              router.refresh();
+                              if (res.ok) {
+                                window.location.reload();
+                              }
                             });
                           }}
                         >
@@ -108,6 +109,9 @@ export default function Page() {
                         <button
                           type="button"
                           className="tw-text-[10px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white sm:tw-py-2 sm:tw-px-3 tw-rounded-lg tw-shadow-lg tw-py-[2px] tw-px-[4px] tw-mx-auto"
+                          onClick={() => {
+                            router.push(`/users/${user.name}`);
+                          }}
                         >
                           <FaArrowRightToBracket />
                         </button>

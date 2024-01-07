@@ -3,20 +3,51 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import useFetchUsers from "@/hooks/useFetchUserList";
-import { useState } from "react";
+// import useFetchUsers from "@/hooks/useFetchUserList";
+import { useEffect, useState } from "react";
 import useFetchUser from "@/hooks/useFetchUser";
+import useFetchUserList from "@/hooks/useFetchUserList";
+import { User } from "@/context/GlobalProvider";
 
 export default function Page() {
   const router = useRouter();
-  const { user } = useFetchUser();
-  const [selectAll, setSelectAll] = useState(false);
+  const { users } = useFetchUser();
+  const { participants, setParticipants } = useFetchUserList();
+  const [selectedPeople, setSelectedPeople] = useState<User[]>(users);
+  const [selectAll, setSelectAll] = useState(true);
 
-  // console.log(participants);
+  const toggleSelection = (user: User) => {
+    setSelectedPeople((prevSelected) => {
+      if (prevSelected.includes(user)) {
+        return prevSelected.filter((name) => name !== user);
+      } else {
+        return [...prevSelected, user];
+      }
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedPeople(users);
+    } else {
+      setSelectedPeople([]);
+    }
+    setSelectAll(!selectAll);
+  };
+
+  useEffect(() => {
+    setParticipants(selectedPeople);
+    console.log(selectedPeople);
+  }, [selectedPeople, setParticipants]);
+
+  // users 데이터가 로드되면 selectedPeople 상태를 업데이트
+  useEffect(() => {
+    setSelectedPeople(users);
+  }, [users]);
 
   return (
     <>
-      {user.length === 0 ? (
+      {!users || users.length === 0 ? (
         <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
           유저를 불러오는 중입니다...
         </div>
@@ -34,9 +65,9 @@ export default function Page() {
             <table className="table table-hover">
               <colgroup>
                 <col style={{ width: "10%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "10%" }} />
                 <col style={{ width: "20%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "10%" }} />
               </colgroup>
 
               <thead>
@@ -48,7 +79,7 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody>
-                {user.map((user, index) => {
+                {users.map((user, index) => {
                   return (
                     <tr
                       key={index}
@@ -59,15 +90,24 @@ export default function Page() {
                           type="checkbox"
                           name="user"
                           value={user.name}
-                          checked={selectAll ? true : false}
+                          checked={
+                            selectedPeople.findIndex(
+                              (selected) => selected.name === user.name
+                            ) !== -1
+                          }
                           className="tw-mx-auto tw-w-4 tw-h-4 tw-rounded-sm tw-border tw-border-gray-300 tw-text-green-500 focus:tw-ring-green-500"
+                          onChange={() => {
+                            toggleSelection(user);
+                          }}
                         />
                       </td>
                       <td>{user.name}</td>
-                      <td>{user.weight.toFixed(1)}</td>
+                      <td className="tw-text-center">
+                        {user.weight.toFixed(1)}
+                      </td>
                       <td>
-                        <div className="tw-flex tw-items-center">
-                          <span className="tw-ml-2 tw-text-[12px] sm:tw-text-[16px]">
+                        <div className="tw-flex tw-items-center tw-justify-center">
+                          <span className="tw-flex tw-ml-2 tw-text-[12px] sm:tw-text-[16px]">
                             <button
                               className="tw-px-2 tw-py-1 sm:tw-px-4 sm:tw-py-2 tw-ml-[1px] tw-bg-cyan-200 tw-rounded-lg sm:tw-ml-8 tw-shadow-lg"
                               onClick={() => {
@@ -114,45 +154,32 @@ export default function Page() {
             </table>
             <div className="col-sm-12">
               <form method="post" target="/user">
-                <div className="tw-flex justify-content-between tw-gap-2">
-                  <div className="tw-flex-grow-0 tw-flex tw-justify-center tw-items-center">
-                    <input
-                      type="checkbox"
-                      id="selectAll"
-                      className="tw-w-4 tw-h-4"
-                    />
-                    <label
-                      htmlFor="selectAll"
-                      className="tw-m-0"
-                      onClick={() => setSelectAll(!selectAll)}
-                    >
-                      모두 선택
-                    </label>
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      className="tw-border tw-py-2 tw-w-[160px]"
-                      id="input_user_name"
-                      aria-describedby="emailHelp"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        router.push("/");
-                      }}
-                      className="tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-yellow-400 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-ml-2"
-                    >
-                      전체 선택
-                    </button>
-                    <button
-                      type="submit"
-                      className="tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
-                    >
-                      확인
-                    </button>
-                  </div>
+                <div className="tw-flex justify-content-end tw-gap-2">
+                  <input
+                    type="text"
+                    name="name"
+                    className="tw-border tw-py-2 tw-w-[160px]"
+                    id="input_user_name"
+                    aria-describedby="emailHelp"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleSelectAll();
+                    }}
+                    className="tw-text-[12px] sm:tw-text-[16px] tw-bg-green-500 hover:tw-bg-green-600 active:tw-bg-green-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg tw-ml-2"
+                  >
+                    전체 선택
+                  </button>
+                  <button
+                    type="button"
+                    className="tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                    onClick={() => {
+                      router.push("/");
+                    }}
+                  >
+                    확인
+                  </button>
                 </div>
               </form>
             </div>
