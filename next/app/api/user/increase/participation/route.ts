@@ -1,14 +1,14 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import { User } from "@/models/user";
-import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextApiRequest) {
+export async function POST(request: NextRequest) {
   await connectMongoDB();
 
   try {
-    const { participants } = request.body; // 요청 본문에서 참가자 목록 추출
-    console.log(participants);
+    const requestBody = await request.text();
+    const { participants } = JSON.parse(requestBody); // 요청 본문에서 참가자 목록 추출
+    // console.log(participants);
 
     if (!participants || !Array.isArray(participants)) {
       return NextResponse.json({ message: "Invalid participants array" });
@@ -25,8 +25,8 @@ export async function POST(request: NextApiRequest) {
       })
     );
 
-    NextResponse.json({ message: "Participation updated successfully" });
+    return NextResponse.json({ message: "Participation updated successfully" });
   } catch (error) {
-    NextResponse.json({ message: "Server error", error: error });
+    return NextResponse.json({ message: "Server error", error: error });
   }
 }

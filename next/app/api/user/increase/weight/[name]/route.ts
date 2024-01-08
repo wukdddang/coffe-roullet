@@ -1,10 +1,9 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import { User } from "@/models/user";
-import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: NextApiRequest,
+  request: NextRequest,
   {
     params,
   }: {
