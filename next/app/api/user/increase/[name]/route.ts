@@ -1,11 +1,10 @@
 import { connectMongoDB } from "@/lib/mongodb";
 import { History } from "@/models/history";
 import { User } from "@/models/user";
-import { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  request: NextApiRequest,
+  request: NextRequest,
   { params }: { params: { name: string } }
 ) {
   await connectMongoDB();
