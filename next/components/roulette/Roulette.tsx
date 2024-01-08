@@ -249,6 +249,7 @@ export default function Roulette() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, ease: "easeInOut" }}
               id="roulette-container"
+              className="tw-relative"
             >
               <canvas
                 ref={canvasRef}
@@ -257,7 +258,7 @@ export default function Roulette() {
                 height="300"
                 className="tw-shadow-xl"
               ></canvas>
-              <div className="tw-flex tw-justify-center tw-items-center tw-pb-[9px]">
+              <div className="tw-absolute -tw-right-8 tw-top-48">
                 <VscTriangleLeft size={36} />
               </div>
             </motion.div>
