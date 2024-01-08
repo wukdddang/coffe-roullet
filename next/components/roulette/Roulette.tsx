@@ -18,7 +18,7 @@ import useFetchUserList from "@/hooks/useFetchUserList";
 
 export default function Roulette() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { participants, setParticipants } = useFetchUserList();
+  const { participants } = useFetchUserList();
   const [colors, setColors] = useState<pastelColors[]>([]);
   const [mode, setMode] = useState<"practice" | "hard">("practice");
 
@@ -85,6 +85,11 @@ export default function Roulette() {
       return;
     }
 
+    const inGameButton = document.querySelector("#inGame") as HTMLButtonElement;
+    if (inGameButton) {
+      inGameButton.disabled = true;
+    }
+
     angle += spinSpeed;
 
     if (isStopping) {
@@ -95,6 +100,7 @@ export default function Roulette() {
         displayWinner(winner); // 당첨자 표시
 
         const stopButton = document.querySelector("#spin") as HTMLButtonElement;
+
         // 멈춘 경우
         isStopping = false;
         isSpinning = false;
@@ -104,6 +110,10 @@ export default function Roulette() {
           stopButton.innerHTML = `
           <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="12px" width="12px" xmlns="http://www.w3.org/2000/svg"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"></path></svg>
           룰렛 돌리기`;
+        }
+
+        if (inGameButton) {
+          inGameButton.disabled = false;
         }
 
         return; // 회전 중단
@@ -116,10 +126,13 @@ export default function Roulette() {
 
   const toggleSpin = () => {
     const stopButton = document.querySelector("#spin") as HTMLButtonElement;
+    const inGameButton = document.querySelector("#inGame") as HTMLButtonElement;
+
     if (isSpinning && !isStopping) {
       isStopping = true;
       if (stopButton) {
         stopButton.disabled = true;
+        inGameButton.disabled = true;
         stopButton.innerHTML = `
         <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="12px" width="12px" xmlns="http://www.w3.org/2000/svg"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5z"></path></svg>
         룰렛 돌리기`;
@@ -258,7 +271,7 @@ export default function Roulette() {
                 height="300"
                 className="tw-shadow-xl"
               ></canvas>
-              <div className="tw-absolute -tw-right-8 tw-top-48">
+              <div className="tw-absolute -tw-right-8 tw-top-44">
                 <VscTriangleLeft size={36} />
               </div>
             </motion.div>
@@ -278,7 +291,8 @@ export default function Roulette() {
                   icon={<FaRunning />}
                   text="연습 모드"
                   type="button"
-                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                  id="inGame"
+                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-blue-500 hover:tw-bg-blue-600 active:tw-bg-blue-600 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg disabled:tw-opacity-50"
                   action="inGame"
                   onClick={() => {
                     setMode("hard");
@@ -289,7 +303,8 @@ export default function Roulette() {
                   icon={<BsFire />}
                   text="실전 모드"
                   type="button"
-                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-rose-600 hover:tw-bg-rose-700 active:tw-bg-rose-700 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg"
+                  id="inGame"
+                  className="tw-flex tw-justify-center tw-items-center tw-gap-2 tw-w-[240px] tw-text-[12px] sm:tw-text-[16px] tw-bg-rose-600 hover:tw-bg-rose-700 active:tw-bg-rose-700 tw-text-white tw-py-2 tw-px-3 tw-rounded-lg disabled:tw-opacity-50"
                   action="inGame"
                   onClick={() => {
                     setMode("practice");
