@@ -13,7 +13,7 @@ export default function Page() {
   const router = useRouter();
   const { users } = useFetchUser();
   const { participants, setParticipants } = useFetchUserList();
-  const [selectedPeople, setSelectedPeople] = useState<User[]>(users);
+  const [selectedPeople, setSelectedPeople] = useState<User[]>(participants);
   const [selectAll, setSelectAll] = useState(true);
 
   const toggleSelection = (user: User) => {
@@ -28,7 +28,7 @@ export default function Page() {
 
   const handleSelectAll = () => {
     if (selectAll) {
-      setSelectedPeople(users);
+      setSelectedPeople(participants);
     } else {
       setSelectedPeople([]);
     }
@@ -38,16 +38,22 @@ export default function Page() {
   useEffect(() => {
     setParticipants(selectedPeople);
     console.log(selectedPeople);
-  }, [selectedPeople, setParticipants]);
+    console.log(users);
+  }, [selectedPeople, setParticipants, users]);
 
   // users 데이터가 로드되면 selectedPeople 상태를 업데이트
   useEffect(() => {
+    setSelectedPeople(participants);
+  }, [participants]);
+
+  useEffect(() => {
     setSelectedPeople(users);
-  }, [users]);
+    console.log(selectedPeople);
+  }, []);
 
   return (
     <>
-      {!users || users.length === 0 ? (
+      {!users || !selectedPeople || selectedPeople.length === 0 ? (
         <div className="tw-flex tw-justify-center tw-items-center tw-relative tw-h-[400px] tw-text-[24px] tw-font-bold">
           유저를 불러오는 중입니다...
         </div>
@@ -79,7 +85,7 @@ export default function Page() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => {
+                {selectedPeople.map((user, index) => {
                   return (
                     <tr
                       key={index}
@@ -91,7 +97,7 @@ export default function Page() {
                           name="user"
                           value={user.name}
                           checked={
-                            selectedPeople.findIndex(
+                            users.findIndex(
                               (selected) => selected.name === user.name
                             ) !== -1
                           }

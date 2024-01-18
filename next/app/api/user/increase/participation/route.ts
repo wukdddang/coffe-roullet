@@ -7,8 +7,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const requestBody = await request.text();
+    console.log(requestBody);
     const { participants } = JSON.parse(requestBody); // 요청 본문에서 참가자 목록 추출
-    // console.log(participants);
+    console.log(participants);
 
     if (!participants || !Array.isArray(participants)) {
       return NextResponse.json({ message: "Invalid participants array" });

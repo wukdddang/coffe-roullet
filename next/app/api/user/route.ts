@@ -3,9 +3,8 @@ import { connectMongoDB, disconnectMongoDB } from "@/lib/mongodb";
 import { User } from "@/models/user";
 
 export async function GET() {
+  await connectMongoDB();
   try {
-    await connectMongoDB();
-
     const users = await User.find();
 
     return NextResponse.json({ users });

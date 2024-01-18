@@ -8,7 +8,8 @@ export default function useFetchUserList() {
 
   const handleFetchUserList = async () => {
     try {
-      const url = "http://localhost:3000/api/user/list";
+      // const url = `http://localhost:3000/api/user/list`;
+      const url = `http://${process.env.NEXT_PUBLIC_IP}:3000/api/user/list`;
       const options = { method: "GET" }; // 요청 메서드와 필요한 옵션
       const responseData = await fetchInstance.runFetch(url, options);
       setParticipants(responseData.users); // 응답 데이터 상태에 저장
