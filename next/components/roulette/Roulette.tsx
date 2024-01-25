@@ -73,7 +73,7 @@ export default function Roulette() {
 
     winnerHtml.innerHTML = "";
     winnerHtml.innerHTML = `
-      <img src="/imgs/congratulation.png" class="target-modal-body-background"/>
+      <img src="${process.env.NEXT_PUBLIC_BASEPATH}/imgs/congratulation.png" class="target-modal-body-background"/>
       <div class="target-modal-body-text font-weight-bold text-center">${winnerName}님! <br/> 커피 감사합니다! ☕</div>
     `;
 
