@@ -76,7 +76,7 @@ export default function Page() {
                           onClick={async () => {
                             console.log("plus");
                             await fetch(
-                              `/api/user/increase/weight/${user.name}`,
+                              `${process.env.NEXT_PUBLIC_BASEPATH}/api/user/increase/weight/${user.name}`,
                               {
                                 method: "GET",
                               }
@@ -93,9 +93,12 @@ export default function Page() {
                           className="tw-px-2 tw-py-1 sm:tw-px-4 sm:tw-py-2 tw-bg-orange-200 tw-rounded-lg sm:tw-ml-2 tw-shadow-lg"
                           onClick={() => {
                             console.log("minus");
-                            fetch(`/api/user/decrease/weight/${user.name}`, {
-                              method: "GET",
-                            }).then((res) => {
+                            fetch(
+                              `${process.env.NEXT_PUBLIC_BASEPATH}/api/user/decrease/weight/${user.name}`,
+                              {
+                                method: "GET",
+                              }
+                            ).then((res) => {
                               if (res.ok) {
                                 window.location.reload();
                               }
