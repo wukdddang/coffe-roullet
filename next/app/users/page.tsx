@@ -13,10 +13,13 @@ import { useRef } from "react";
 export default function Page() {
   const router = useRouter();
   const { users } = useFetchUser();
-  const nameInputRef = useRef(null);
-
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const handleSubmit = async () => {
-    const enteredName = nameInputRef.current.value;
+    const enteredName = nameInputRef.current?.valueOf();
+
+    if (!enteredName) {
+      return;
+    }
 
     try {
       const response = await fetch(
