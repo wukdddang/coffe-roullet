@@ -15,7 +15,8 @@ export default function Page() {
   const { users } = useFetchUser();
   const nameInputRef = useRef<HTMLInputElement>(null);
   const handleSubmit = async () => {
-    const enteredName = nameInputRef.current?.valueOf();
+    console.log(nameInputRef.current?.value);
+    const enteredName = nameInputRef.current?.value;
 
     if (!enteredName) {
       return;
