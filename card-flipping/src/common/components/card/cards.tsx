@@ -13,44 +13,71 @@ const Cards = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [winners, setWinners] = useState<number[]>([]);
   const [flipped, setFlipped] = useState<{ [key: number]: boolean }>({});
+  const [excludedUsers, setExcludedUsers] = useState<number[]>([]);
+  const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
   
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await fetch('/api/users');
       const data: User[] = await response.json();
-      const shuffledUsers = shuffleArray(data);
-      setUsers(shuffledUsers);
+      setUsers(data);
       // 초기 flipped 상태 설정
-      const initialFlipped = shuffledUsers.reduce((acc, user) => ({ ...acc, [user.id]: false }), {});
+      const initialFlipped = data.reduce((acc, user) => ({ ...acc, [user.id]: false }), {});
       setFlipped(initialFlipped);
-      
-      // 당첨자 설정
-      if (shuffledUsers.length > 0) {
-        const winnerIndex = Math.floor(Math.random() * shuffledUsers.length);
-        setWinners([shuffledUsers[winnerIndex].id]);
-      }
     };
     
     fetchUsers();
   }, []);
   
+  const shuffleAndSelectWinner = () => {
+    const filteredUsers = users.filter(user => !excludedUsers.includes(user.id));
+    const shuffledUsers = shuffleArray(filteredUsers);
+    if (shuffledUsers.length > 0) {
+      const winnerIndex = Math.floor(Math.random() * shuffledUsers.length);
+      setWinners([shuffledUsers[winnerIndex].id]);
+    } else {
+      setWinners([]);
+    }
+    // 카드 리셋
+    const resetFlipped = filteredUsers.reduce((acc, user) => ({ ...acc, [user.id]: false }), {});
+    setFlipped(resetFlipped);
+    setDisplayedUsers(filteredUsers);
+  };
+  
   const handleCardClick = (id: number) => {
     setFlipped((prev) => ({ ...prev, [id]: !prev[id] }));
   };
   
-  const handleRestart = () => {
-    window.location.reload();
+  const handleExcludeChange = (id: number) => {
+    setExcludedUsers((prev) =>
+      prev.includes(id) ? prev.filter(userId => userId !== id) : [...prev, id]
+    );
   };
+  
   return (
     <div className="flex flex-col items-center">
+      <div className="mb-4">
+        <h2 className="text-xl font-bold">제외할 사람 선택:</h2>
+        {users.map((user) => (
+          <label key={user.id} className="block">
+            <input
+              type="checkbox"
+              checked={excludedUsers.includes(user.id)}
+              onChange={() => handleExcludeChange(user.id)}
+              className="mr-2"
+            />
+            {user.name}
+          </label>
+        ))}
+      </div>
       <button
-        onClick={handleRestart}
+        onClick={shuffleAndSelectWinner}
         className="mb-4 px-4 py-2 bg-green-500 text-white rounded"
       >
         섞기 / 게임 시작
       </button>
       <div className="flex flex-wrap justify-center">
-        {users.map((user) => (
+        {displayedUsers.map((user) => (
           <Card
             key={user.id}
             name={user.name}

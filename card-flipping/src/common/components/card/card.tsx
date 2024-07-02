@@ -21,12 +21,12 @@ const Card: React.FC<CardProps> = ({ name, isWinner, flipped, onClick }) => {
         'relative w-full h-full text-center transition-transform duration-500 transform-style-preserve-3d',
         { 'rotate-y-180': flipped }
       )}>
-        <div className="absolute w-full h-full backface-hidden bg-blue-500 text-white flex items-center justify-center">
+        <div className="absolute w-full h-full backface-hidden bg-blue-500 text-white flex items-center justify-center rounded-md">
           {name}
         </div>
         <div className={classNames(
-          'absolute w-full h-full backface-hidden text-white flex items-center justify-center rotate-y-180',
-          { 'bg-green-500': isWinner, 'bg-red-500': !isWinner }
+          'absolute w-full h-full backface-hidden text-white flex items-center justify-center rotate-y-180 rounded-md',
+          { 'bg-green-400': isWinner, 'bg-red-400': !isWinner }
         )}>
           {isWinner ? '당첨!' : '꽝!'}
         </div>
