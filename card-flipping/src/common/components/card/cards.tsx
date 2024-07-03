@@ -1,8 +1,9 @@
 'use client'
 
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from "@/common/components/card/card";
-import {shuffleArray} from "@/utils/shuffle";
+import { shuffleArray } from "@/utils/shuffle";
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface User {
   id: number;
@@ -15,6 +16,7 @@ const Cards = () => {
   const [flipped, setFlipped] = useState<{ [key: number]: boolean }>({});
   const [excludedUsers, setExcludedUsers] = useState<number[]>([]);
   const [displayedUsers, setDisplayedUsers] = useState<User[]>([]);
+  const [isShuffling, setIsShuffling] = useState(false);
   
   useEffect(() => {
     const fetchUsers = async () => {
@@ -41,7 +43,11 @@ const Cards = () => {
     // 카드 리셋
     const resetFlipped = filteredUsers.reduce((acc, user) => ({ ...acc, [user.id]: false }), {});
     setFlipped(resetFlipped);
-    setDisplayedUsers(filteredUsers);
+    setDisplayedUsers(shuffledUsers);
+    
+    // 셔플 애니메이션 시작
+    setIsShuffling(true);
+    setTimeout(() => setIsShuffling(false), 1000); // 1초 후 애니메이션 종료
   };
   
   const handleCardClick = (id: number) => {
@@ -77,17 +83,28 @@ const Cards = () => {
         섞기 / 게임 시작
       </button>
       <div className="flex flex-wrap justify-center">
-        {displayedUsers.map((user) => (
-          <Card
-            key={user.id}
-            name={user.name}
-            isWinner={winners.includes(user.id)}
-            flipped={flipped[user.id]}
-            onClick={() => handleCardClick(user.id)}
-          />
-        ))}
+        <AnimatePresence>
+          {displayedUsers.map((user) => (
+            <motion.div
+              key={user.id}
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card
+                name={user.name}
+                isWinner={winners.includes(user.id)}
+                flipped={flipped[user.id]}
+                onClick={() => handleCardClick(user.id)}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
 };
+
 export default Cards;
